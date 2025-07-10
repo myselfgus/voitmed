@@ -1,0 +1,234 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Voitmed.Web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\agents.yaml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Voitmed.Web\\agents.yaml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\appsettings.Development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Web\\appsettings.Development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Voitmed.Web\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\medical_scribe_ui.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:medical_scribe_ui.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Web\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\Program.cs",
+              "RelativeDocumentMoniker": "src\\Voitmed.Web\\Program.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\Program.cs",
+              "RelativeToolTip": "src\\Voitmed.Web\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T04:03:52.176Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\index.html",
+              "RelativeDocumentMoniker": "src\\Voitmed.Web\\index.html",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\index.html",
+              "RelativeToolTip": "src\\Voitmed.Web\\index.html",
+              "ViewState": "AgIAALEAAAAAAAAAAAAAAM8AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-07-10T04:04:13.007Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "agents.yaml",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\agents.yaml",
+              "RelativeDocumentMoniker": "src\\Voitmed.Web\\agents.yaml",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Web\\agents.yaml",
+              "RelativeToolTip": "src\\Voitmed.Web\\agents.yaml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2025-07-10T04:03:41.498Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Web\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\appsettings.Development.json",
+              "RelativeToolTip": "src\\MedicalScribe.Web\\appsettings.Development.json",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAqwBgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-10T03:52:07.53Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MedicalScribeHub.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Web\\Hubs\\MedicalScribeHub.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAqwEcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:51:49.191Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ISpecializedAgent.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs",
+              "RelativeDocumentMoniker": "src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs",
+              "RelativeToolTip": "src\\Voitmed.Core\\Interfaces\\ISpecializedAgent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T04:04:08.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "OrchestratorAgent.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs",
+              "RelativeDocumentMoniker": "src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs",
+              "RelativeToolTip": "src\\Voitmed.Core\\Agents\\OrchestratorAgent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T04:04:00.54Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "medical_scribe_ui.html",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\medical_scribe_ui.html",
+              "RelativeDocumentMoniker": "medical_scribe_ui.html",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\medical_scribe_ui.html",
+              "RelativeToolTip": "medical_scribe_ui.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-07-10T03:58:14.613Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PdfGenerationService.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Web\\Services\\PdfGenerationService.cs",
+              "ViewState": "AgIAACUAAAAAAAAAAAASwD0AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:57:59.62Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AzureAIService.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Infrastructure\\Services\\AzureAIService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:52:01.672Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "OrchestratorAgent.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Core\\Agents\\OrchestratorAgent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:51:57.883Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "IAzureAIService.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Core\\Interfaces\\IAzureAIService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:51:55.134Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Program.cs",
+              "RelativeDocumentMoniker": "src\\MedicalScribe.Web\\Program.cs",
+              "ToolTip": "C:\\Users\\GustavoMendeseSilva\\source\\repos\\voitmed\\src\\MedicalScribe.Web\\Program.cs",
+              "RelativeToolTip": "src\\MedicalScribe.Web\\Program.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAqwFEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-10T03:51:35.703Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
