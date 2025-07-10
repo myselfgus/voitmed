@@ -1,0 +1,481 @@
+# Templates Dinâmicos - Sistema Inteligente de Reconhecimento
+
+O sistema identifica automaticamente quando gerar cada tipo de documento baseado no conteúdo da transcrição e entidades extraídas.
+
+## 1. Configuração de Triggers Automáticos
+
+### Pattern Recognition Engine
+```json
+{
+  "documentPatterns": {
+    "prescricao": {
+      "confidence_threshold": 0.85,
+      "required_entities": [
+        {
+          "type": "MedicationName",
+          "min_count": 1
+        },
+        {
+          "type": "Dosage", 
+          "min_count": 1
+        }
+      ],
+      "keywords": [
+        "prescrever", "receitar", "medicação", "remédio", 
+        "tomar", "mg", "comprimido", "cápsula"
+      ],
+      "speaker_context": "speaker_0", // Médico prescrevendo
+      "template": "receita_medica.md",
+      "auto_generate": true
+    },
+    
+    "agendamento": {
+      "confidence_threshold": 0.75,
+      "temporal_indicators": [
+        "retorno", "próxima consulta", "agendar",
+        "voltar", "revisão", "controle"
+      ],
+      "time_expressions": [
+        "\\d+ dias?", "\\d+ semanas?", "\\d+ meses?",
+        "próxima semana", "mês que vem", "quinze dias"
+      ],
+      "template": "agendamento_automatico.md",
+      "auto_generate": true,
+      "action": "create_calendar_event"
+    },
+    
+    "atestado": {
+      "confidence_threshold": 0.90,
+      "required_keywords": [
+        "atestado", "afastamento", "incapacidade", 
+        "repouso", "licença médica"
+      ],
+      "entities": ["Condition", "Procedure"],
+      "duration_indicators": [
+        "\\d+ dias?", "uma semana", "repouso de"
+      ],
+      "template": "atestado_medico.md",
+      "auto_generate": true
+    },
+    
+    "laudo": {
+      "confidence_threshold": 0.88,
+      "keywords": [
+        "laudo", "resultado", "exame", "diagnóstico",
+        "relatório médico", "conclusão"
+      ],
+      "entities": ["Procedure", "Condition", "BodyStructure"],
+      "template": "laudo_exame.md",
+      "auto_generate": true
+    },
+    
+    "evolucao": {
+      "confidence_threshold": 0.60,
+      "always_active": true,  // Sempre documenta evolução
+      "captures": [
+        "sintomas", "queixas", "exame físico", 
+        "conduta", "orientações"
+      ],
+      "template": "evolucao_clinica.md",
+      "auto_generate": true
+    }
+  }
+}
+```
+
+## 2. Templates Markdown com Mustache
+
+### receita_medica.md
+```markdown
+---
+template_type: "receita_medica"
+auto_trigger: true
+required_entities: ["MedicationName", "Dosage", "Frequency"]
+---
+
+# RECEITA MÉDICA
+
+**Dr. {{doctor_name}}**  
+CRM: {{doctor_crm}}  
+{{clinic_name}}  
+{{clinic_address}}
+
+---
+
+**PACIENTE:** {{patient_name}}  
+**DATA:** {{consultation_date}}  
+**IDADE:** {{patient_age}} anos
+
+## PRESCRIÇÃO
+
+{{#medications}}
+**{{medication_name}}** {{dosage}}
+- **Posologia:** {{frequency}}
+- **Duração:** {{duration}}
+- **Orientações:** {{instructions}}
+
+{{/medications}}
+
+## ORIENTAÇÕES GERAIS
+{{general_instructions}}
+
+---
+**Assinatura Digital:** {{doctor_signature}}  
+**Data:** {{issue_date}}  
+**Válida por 30 dias**
+
+*Esta receita foi gerada automaticamente pelo sistema Medical Scribe*
+```
+
+### agendamento_automatico.md
+```markdown
+---
+template_type: "agendamento"
+auto_trigger: true
+graph_action: "create_calendar_event"
+---
+
+# AGENDAMENTO AUTOMÁTICO
+
+## DETALHES DO RETORNO
+
+**Paciente:** {{patient_name}}  
+**Médico:** {{doctor_name}}  
+**Data proposta:** {{proposed_date}}  
+**Horário:** {{proposed_time}}  
+**Tipo:** {{appointment_type}}
+
+## CONTEXTO DA CONSULTA
+{{consultation_summary}}
+
+## MOTIVO DO RETORNO
+{{return_reason}}
+
+## AÇÕES EXECUTADAS
+- ✅ Evento criado no calendário
+- ✅ Notificação enviada ao paciente
+- ✅ Lembrete agendado (24h antes)
+
+**Status:** {{status}}  
+**Event ID:** {{calendar_event_id}}
+```
+
+### atestado_medico.md
+```markdown
+---
+template_type: "atestado"
+auto_trigger: true
+required_fields: ["condition", "duration"]
+---
+
+# ATESTADO MÉDICO
+
+Eu, **{{doctor_name}}**, portador do CRM {{doctor_crm}}, atesto para os devidos fins que o(a) paciente **{{patient_name}}**, portador(a) do CPF {{patient_cpf}}, esteve sob meus cuidados médicos.
+
+## DIAGNÓSTICO
+**CID-10:** {{cid10_code}} - {{condition_description}}
+
+## RECOMENDAÇÕES
+O paciente necessita de **{{rest_duration}}** de afastamento de suas atividades laborais, devendo permanecer em repouso domiciliar.
+
+## PERÍODO DE AFASTAMENTO
+- **Início:** {{start_date}}
+- **Término:** {{end_date}}
+- **Total:** {{total_days}} dias
+
+## OBSERVAÇÕES
+{{medical_observations}}
+
+---
+
+**Local:** {{clinic_city}}, {{issue_date}}
+
+**{{doctor_name}}**  
+**CRM {{doctor_crm}}**  
+**Assinatura Digital**
+
+*Atestado gerado automaticamente - Válido conforme CFM*
+```
+
+### laudo_exame.md
+```markdown
+---
+template_type: "laudo"
+auto_trigger: true
+entities_captured: ["Procedure", "BodyStructure", "Condition"]
+---
+
+# LAUDO MÉDICO
+
+## IDENTIFICAÇÃO
+**Paciente:** {{patient_name}}  
+**Data Nascimento:** {{patient_birth_date}}  
+**Exame:** {{exam_type}}  
+**Data do Exame:** {{exam_date}}
+
+## PROCEDIMENTO REALIZADO
+{{procedure_description}}
+
+## ACHADOS
+{{#findings}}
+### {{finding_category}}
+{{finding_description}}
+{{#abnormal}}
+⚠️ **Achado Relevante:** {{abnormal_description}}
+{{/abnormal}}
+{{/findings}}
+
+## IMPRESSÃO DIAGNÓSTICA
+{{diagnostic_impression}}
+
+## CONCLUSÃO
+{{conclusion}}
+
+## RECOMENDAÇÕES
+{{recommendations}}
+
+---
+
+**Médico Responsável:** {{doctor_name}}  
+**CRM:** {{doctor_crm}}  
+**Especialidade:** {{specialty}}  
+**Data do Laudo:** {{report_date}}
+```
+
+### evolucao_clinica.md
+```markdown
+---
+template_type: "evolucao"
+auto_trigger: true
+always_active: true
+---
+
+# EVOLUÇÃO CLÍNICA
+
+**Data:** {{consultation_date}}  
+**Horário:** {{consultation_time}}  
+**Duração:** {{consultation_duration}}
+
+## SUBJETIVO
+### Queixa Principal
+{{chief_complaint}}
+
+### História da Doença Atual
+{{present_illness}}
+
+### Sintomas Relatados
+{{#symptoms}}
+- {{symptom_description}} (Intensidade: {{intensity}}/10)
+{{/symptoms}}
+
+## OBJETIVO
+### Exame Físico
+{{physical_examination}}
+
+### Sinais Vitais
+- **PA:** {{blood_pressure}}
+- **FC:** {{heart_rate}}
+- **Temp:** {{temperature}}
+- **Peso:** {{weight}}
+
+## AVALIAÇÃO
+### Hipóteses Diagnósticas
+{{#diagnoses}}
+1. {{diagnosis}} (CID: {{cid_code}})
+{{/diagnoses}}
+
+## PLANO
+### Condutas
+{{#interventions}}
+- {{intervention_type}}: {{intervention_description}}
+{{/interventions}}
+
+### Medicações Prescritas
+{{#medications}}
+- {{medication}} {{dosage}} - {{frequency}}
+{{/medications}}
+
+### Agendamentos
+{{#appointments}}
+- {{appointment_type}} em {{appointment_date}}
+{{/appointments}}
+
+---
+
+**Próxima Consulta:** {{next_appointment}}  
+**Observações:** {{additional_notes}}
+
+*Evolução gerada automaticamente pelo Medical Scribe*
+```
+
+## 3. Sistema de Triggers Inteligente
+
+### Processador de Contexto
+```csharp
+public class ContextProcessor
+{
+    public async Task<List<TriggeredTemplate>> ProcessTranscriptionChunk(
+        string transcriptionText, 
+        List<HealthcareEntity> entities,
+        string speaker)
+    {
+        var triggeredTemplates = new List<TriggeredTemplate>();
+        
+        foreach (var pattern in _documentPatterns)
+        {
+            var confidence = CalculateConfidence(
+                transcriptionText, 
+                entities, 
+                pattern.Value, 
+                speaker
+            );
+            
+            if (confidence >= pattern.Value.ConfidenceThreshold)
+            {
+                triggeredTemplates.Add(new TriggeredTemplate
+                {
+                    Type = pattern.Key,
+                    Confidence = confidence,
+                    Template = pattern.Value.Template,
+                    AutoGenerate = pattern.Value.AutoGenerate,
+                    ExtractedData = ExtractTemplateData(transcriptionText, entities, pattern.Value)
+                });
+            }
+        }
+        
+        return triggeredTemplates;
+    }
+    
+    private double CalculateConfidence(
+        string text, 
+        List<HealthcareEntity> entities, 
+        DocumentPattern pattern,
+        string speaker)
+    {
+        double score = 0;
+        
+        // 1. Verificar entidades obrigatórias
+        if (pattern.RequiredEntities?.Any() == true)
+        {
+            var entityScore = CheckRequiredEntities(entities, pattern.RequiredEntities);
+            score += entityScore * 0.4; // 40% do peso
+        }
+        
+        // 2. Verificar palavras-chave
+        if (pattern.Keywords?.Any() == true)
+        {
+            var keywordScore = CheckKeywords(text, pattern.Keywords);
+            score += keywordScore * 0.3; // 30% do peso
+        }
+        
+        // 3. Verificar contexto do speaker
+        if (pattern.SpeakerContext != null)
+        {
+            var speakerScore = speaker == pattern.SpeakerContext ? 1.0 : 0.5;
+            score += speakerScore * 0.2; // 20% do peso
+        }
+        
+        // 4. Verificar indicadores temporais (para agendamentos)
+        if (pattern.TemporalIndicators?.Any() == true)
+        {
+            var temporalScore = CheckTemporalIndicators(text, pattern.TemporalIndicators);
+            score += temporalScore * 0.1; // 10% do peso
+        }
+        
+        return Math.Min(1.0, score);
+    }
+}
+```
+
+## 4. Dados de Exemplo Extraídos
+
+### Para Receita Médica
+```json
+{
+  "medications": [
+    {
+      "medication_name": "Ibuprofeno",
+      "dosage": "600mg", 
+      "frequency": "1 comprimido a cada 8 horas",
+      "duration": "5 dias",
+      "instructions": "Tomar após as refeições"
+    }
+  ],
+  "doctor_name": "Dr. João Silva",
+  "doctor_crm": "12345/SP",
+  "patient_name": "Maria Santos",
+  "consultation_date": "15/01/2024",
+  "general_instructions": "Retornar se persistirem os sintomas"
+}
+```
+
+### Para Agendamento
+```json
+{
+  "patient_name": "Maria Santos",
+  "doctor_name": "Dr. João Silva", 
+  "proposed_date": "30/01/2024",
+  "proposed_time": "14:00",
+  "appointment_type": "Retorno",
+  "return_reason": "Acompanhar evolução do tratamento",
+  "consultation_summary": "Paciente com dor de cabeça, prescrito ibuprofeno",
+  "status": "Agendado",
+  "calendar_event_id": "evt_123456789"
+}
+```
+
+## 5. Configuração de Storage
+
+### Estrutura no Azure Blob
+```
+medical-scribe-templates/
+├── templates/
+│   ├── receita_medica.md
+│   ├── atestado_medico.md
+│   ├── laudo_exame.md
+│   ├── evolucao_clinica.md
+│   └── agendamento_automatico.md
+├── config/
+│   ├── document_patterns.json
+│   ├── entity_mappings.json
+│   └── trigger_rules.json
+└── generated/
+    ├── 2024-01-15/
+    │   ├── receita_001.pdf
+    │   ├── evolucao_001.pdf
+    │   └── agendamento_001.json
+    └── patient_data/
+        └── [encrypted_files]
+```
+
+## 6. Comandos de Deployment
+
+```bash
+# Upload dos templates
+az storage blob upload-batch \
+  --destination templates \
+  --source ./templates \
+  --account-name medicalstorage
+
+# Configurar triggers
+az webapp config appsettings set \
+  --name medical-scribe-app \
+  --settings TEMPLATE_STORAGE_URL="https://medicalstorage.blob.core.windows.net/templates"
+
+# Testar padrões
+curl -X POST https://medical-scribe-app.azurewebsites.net/api/test-patterns \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Vou prescrever ibuprofeno 600mg, tomar 1 comprimido a cada 8 horas"}'
+```
+
+Com esta configuração, o sistema automaticamente:
+
+1. **Monitora** cada chunk da transcrição
+2. **Identifica** padrões e entidades médicas  
+3. **Calcula** confidence scores para cada template
+4. **Dispara** agentes especializados quando threshold é atingido
+5. **Gera** documentos automaticamente durante a consulta
+6. **Atualiza** a UI em tempo real via SignalR
+7. **Persiste** em FHIR e grafo para navegação futura
+
+O médico vê os documentos sendo gerados ao vivo, conforme fala - sem precisar acionar nada manualmente! 🚀

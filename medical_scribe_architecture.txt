@@ -1,0 +1,218 @@
+# Medical Scribe - Arquitetura Azure Cloud-Native
+
+## 1. ENTRADA: Streaming de áudio longo
+services:
+  speech_streaming:
+    service: "Azure Speech SDK"
+    features:
+      - "Real-time transcription + diarização"
+      - "Chunked transfer (1024 bytes)"
+      - "Fallback para Fast Transcription API"
+      - "WebSocket streaming até 120min"
+    configuration:
+      - "Format: audio/webm;codecs=opus"
+      - "Sample rate: 16kHz" 
+      - "Channels: mono"
+      - "Diarization: enabled (speaker_0, speaker_1)"
+
+## 2. PROCESSAMENTO: Agentes especializados em paralelo
+intelligent_agents:
+  orchestrator_agent:
+    service: "Azure OpenAI Assistants API"
+    model: "gpt-4o"
+    role: "Proxy decisor - roteia para agentes especializados"
+    triggers:
+      - "Detecta contexto médico"
+      - "Identifica intenções (prescrever, laudar, marcar)"
+      - "Dispara agentes especializados em paralelo"
+    
+  prescription_agent:
+    service: "Azure OpenAI Assistants API" 
+    model: "gpt-4"
+    specialization: "Geração de receitas médicas"
+    triggers:
+      - "Palavras-chave: prescrever, medicação, mg, comprimido"
+      - "NER: MedicationName, Dosage, Frequency"
+    tools:
+      - "function: generate_prescription_document"
+      - "function: validate_medication_interaction"
+    
+  appointment_agent:
+    service: "Azure OpenAI Assistants API"
+    model: "gpt-4"
+    specialization: "Agendamento automático"
+    triggers:
+      - "Palavras-chave: retorno, agendar, próxima consulta"
+      - "Temporal: em X dias, semana que vem"
+    tools:
+      - "function: create_calendar_event" # Microsoft Graph API
+      - "function: find_available_slots"
+      
+  report_agent:
+    service: "Azure OpenAI Assistants API"
+    model: "gpt-4" 
+    specialization: "Laudos e atestados"
+    triggers:
+      - "Palavras-chave: atestado, laudo, incapacidade"
+      - "Contexto: CID-10, dias de afastamento"
+    tools:
+      - "function: generate_medical_report"
+      - "function: cid10_classification"
+
+## 3. EXTRAÇÃO SEMÂNTICA: NER + Ontologias
+semantic_extraction:
+  text_analytics_health:
+    service: "Azure Text Analytics for Health"
+    capabilities:
+      - "27 medical entities (HIPAA + extended)"
+      - "Medication, Dosage, Frequency relations"
+      - "Real-time entity extraction"
+    entities_detected:
+      - "MedicationName: 'ibuprofen'"
+      - "Dosage: '100mg'" 
+      - "Frequency: 'twice daily'"
+      - "Condition: 'headache'"
+      - "Procedure: 'consultation'"
+      
+  ontology_graph:
+    service: "Azure Cosmos DB Gremlin"
+    structure:
+      vertices:
+        - "Patient (id, name, medical_record)"
+        - "Session (id, date, duration, transcript)"
+        - "Medication (name, dosage, frequency)" 
+        - "Condition (icd10, description)"
+        - "Document (type, template_id, generated_at)"
+      edges:
+        - "Patient -HAS_SESSION-> Session"
+        - "Session -CONTAINS-> Medication"
+        - "Session -DIAGNOSES-> Condition" 
+        - "Session -GENERATES-> Document"
+
+## 4. TEMPLATES DINÂMICOS: Reconhecimento automático de padrões
+template_engine:
+  pattern_recognition:
+    triggers:
+      prescription_pattern:
+        - "confidence_threshold: 0.85"
+        - "required_entities: [MedicationName, Dosage]"
+        - "template: templates/receita_medica.md"
+      
+      appointment_pattern:
+        - "confidence_threshold: 0.80" 
+        - "temporal_indicators: ['próxima', 'retorno', 'agendar']"
+        - "template: auto_schedule_appointment"
+        
+      report_pattern:
+        - "confidence_threshold: 0.90"
+        - "context_indicators: ['atestado', 'laudo', 'CID']"
+        - "template: templates/laudo_medico.md"
+
+  template_storage:
+    service: "Azure Blob Storage"
+    structure: |
+      templates/
+      ├── receita_medica.md
+      ├── atestado_medico.md  
+      ├── laudo_exame.md
+      ├── evolucao_clinica.md
+      └── encaminhamento.md
+    
+  document_generation:
+    service: "Azure Functions"
+    process:
+      - "Mustache template rendering"
+      - "PDF generation via wkhtmltopdf"
+      - "FHIR resource creation"
+      - "Storage em Blob + metadata"
+
+## 5. PERSISTÊNCIA: FHIR + Grafos
+data_persistence:
+  fhir_service:
+    service: "Azure Health Data Services"
+    resources:
+      - "Encounter (consulta)"
+      - "MedicationRequest (receita)"
+      - "Observation (exames)"
+      - "DiagnosticReport (laudos)"
+      - "Appointment (agendamentos)"
+    
+  graph_database:
+    service: "Azure Cosmos DB Gremlin" 
+    queries_examples:
+      - "g.V().hasLabel('Patient').has('id', patient_id).out('HAS_SESSION').out('GENERATES')"
+      - "g.V().hasLabel('Medication').in('CONTAINS').has('date', within(last_30_days))"
+
+## 6. ORQUESTRAÇÃO: Triggers automáticos durante consulta
+real_time_orchestration:
+  event_processor:
+    service: "Azure Service Bus + Functions"
+    workflow:
+      - "Speech chunk → Event Grid → Topic específico"
+      - "NER entities → Pattern matching → Agent trigger"
+      - "Agent response → Document generation → UI update"
+      
+  ui_updates:
+    service: "Azure SignalR Service"
+    features:
+      - "Live transcription display"
+      - "Real-time checklist de ações"
+      - "Document preview instantâneo"
+      - "Status agentes (working/completed)"
+
+## 7. INTEGRAÇÃO CALENDÁRIO: Microsoft Graph
+calendar_integration:
+  graph_api:
+    service: "Microsoft Graph API v1.0"
+    permissions:
+      - "Calendars.ReadWrite"
+      - "User.Read"
+    functions:
+      create_appointment:
+        endpoint: "POST /me/calendar/events"
+        payload: |
+          {
+            "subject": "Retorno - [Patient Name]",
+            "start": {
+              "dateTime": "auto_calculated",
+              "timeZone": "America/Sao_Paulo"
+            },
+            "end": {
+              "dateTime": "auto_calculated + 30min", 
+              "timeZone": "America/Sao_Paulo"
+            },
+            "body": {
+              "content": "Generated from consultation transcript"
+            }
+          }
+
+## 8. DEPLOYMENT: Infraestrutura como código
+infrastructure:
+  provisioning:
+    tool: "Azure Developer CLI (azd)"
+    template: "Healthcare Agent Orchestrator"
+    regions: ["Brazil South", "East US 2"]
+    
+  services_created:
+    - "Resource Group: rg-medical-scribe"
+    - "Speech Service: speech-scribe-br"
+    - "OpenAI Service: openai-agents-br" 
+    - "Health Data Services: fhir-scribe-br"
+    - "Cosmos DB: cosmos-gremlin-scribe"
+    - "Storage Account: storscribetemplates"
+    - "Service Bus: sb-scribe-events"
+    - "App Service: app-orchestrator"
+    - "Static Web Apps: ui-medical-scribe"
+
+## 9. CUSTOS ESTIMADOS (créditos Azure)
+cost_estimation:
+  monthly_usage: "~150 consultas de 45min cada"
+  breakdown:
+    speech_service: "$45 (22.5h transcrição)"
+    openai_service: "$120 (agents + embeddings)"
+    health_data_services: "$0 (tier gratuito)"
+    cosmos_gremlin: "$25 (400 RU/s)"
+    storage_blob: "$5 (templates + documents)"
+    app_service: "$60 (P1v3)"
+    total_monthly: "$255"
+  credit_consumption: "~45% dos $200 + ongoing $55"

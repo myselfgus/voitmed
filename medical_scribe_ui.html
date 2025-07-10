@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Scribe - Sistema Inteligente</title>
+    <script src="https://unpkg.com/@microsoft/signalr@latest/dist/browser/signalr.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .header h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+
+        .indicator-dot.active {
+            background: #2ecc71;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            overflow-y: auto;
+        }
+
+        .panel h2 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-icon {
+            font-size: 1.2em;
+        }
+
+        .transcription-panel {
+            grid-row: 2;
+        }
+
+        .agents-panel {
+            grid-row: 2;
+        }
+
+        .documents-panel {
+            grid-row: 2;
+        }
+
+        .transcription-content {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .speaker-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .speaker-0 {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .speaker-1 {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .agent-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card.active {
+            border-left-color: #28a745;
+            background: #d4edda;
+            transform: translateX(5px);
+        }
+
+        .agent-card.working {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+            animation: workingPulse 1.5s infinite;
+        }
+
+        @keyframes workingPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .agent-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .agent-status {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .agent-confidence {
+            font-size: 11px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .document-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .document-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .document-item.new {
+            border-color: #28a745;
+            background: #d4edda;
+            animation: fadeInSlide 0.5s ease;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .document-type {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+            transform: translateY(-1px);
+        }
+
+        .controls {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .control-btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .stop-btn {
+            background: linear-gradient(45deg, #dc3545, #e74c3c);
+            color: white;
+        }
+
+        .stop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+
+        .processing-indicator {
+            display: none;
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        .processing-indicator.active {
+            display: block;
+        }
+
+        .confidence-bar {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffc107 0%, #28a745 100%);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏥 Medical Scribe Intelligence</h1>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="indicator-dot" id="speechIndicator"></div>
+                    <span>Speech Recognition</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="indicator-dot" id="agentsIndicator"></div>
+                    <span>Agentes Ativos</span>
+                </div>
+                <div class="status-indicator">
+                    <div class="indicator-dot" id="documentsIndicator"></div>
+                    <span>Documentos Gerados</span>
+                </div>
+                <div class="status-indicator">
+                    <strong>Sessão: <span id="sessionTime">00:00</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transcription Panel -->
+        <div class="panel transcription-panel">
+            <h2>
+                <span class="panel-icon">🎤</span>
+                Transcrição em Tempo Real
+            </h2>
+            <div class="transcription-content" id="transcriptionContent">
+                <div class="processing-indicator" id="processingIndicator">
+                    🔄 Aguardando início da consulta...
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents Panel -->
+        <div class="panel agents-panel">
+            <h2>
+                <span class="panel-icon">🤖</span>
+                Agentes Especializados
+            </h2>
+            <div id="agentsContainer">
+                <div class="agent-card" id="prescriptionAgent">
+                    <div class="agent-name">💊 Prescription Agent</div>
+                    <div class="agent-status">Aguardando menção de medicações...</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="agent-confidence">Confiança: 0%</div>
+                </div>
+                
+                <div class="agent-card" id="appointmentAgent">
+                    <div class="agent-name">📅 Appointment Agent</div>
+                    <div class="agent-status">Aguardando agendamentos...</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="agent-confidence">Confiança: 0%</div>
+                </div>
+                
+                <div class="agent-card" id="reportAgent">
+                    <div class="agent-name">📋 Report Agent</div>
+                    <div class="agent-status">Aguardando laudos/atestados...</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="agent-confidence">Confiança: 0%</div>
+                </div>
+                
+                <div class="agent-card" id="evolutionAgent">
+                    <div class="agent-name">📝 Evolution Agent</div>
+                    <div class="agent-status">Documentando evolução...</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="agent-confidence">Confiança: 0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Panel -->
+        <div class="panel documents-panel">
+            <h2>
+                <span class="panel-icon">📄</span>
+                Documentos Gerados
+            </h2>
+            <div id="documentsContainer">
+                <div class="processing-indicator" id="documentsPlaceholder">
+                    📋 Documentos aparecerão aqui automaticamente conforme forem detectados na conversa...
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn start-btn" id="startBtn" onclick="startSession()">
+                🎙️ Iniciar Consulta
+            </button>
+            <button class="control-btn stop-btn" id="stopBtn" onclick="stopSession()" style="display: none;">
+                ⏹️ Finalizar Consulta
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let isSessionActive = false;
+        let sessionStartTime = null;
+        let sessionTimer = null;
+        let signalRConnection = null;
+
+        // Initialize SignalR connection
+        async function initializeSignalR() {
+            signalRConnection = new signalR.HubConnectionBuilder()
+                .withUrl("/medicalhub") // URL do Azure SignalR
+                .build();
+
+            // Eventos de transcrição
+            signalRConnection.on("TranscriptionUpdate", function (data) {
+                addTranscriptionMessage(data.speaker, data.text, data.timestamp, data.confidence);
+            });
+
+            // Eventos de agentes
+            signalRConnection.on("AgentActivated", function (data) {
+                activateAgent(data.agentType, data.confidence, data.status);
+            });
+
+            // Eventos de documentos
+            signalRConnection.on("DocumentGenerated", function (data) {
+                addGeneratedDocument(data.type, data.content, data.metadata);
+            });
+
+            try {
+                await signalRConnection.start();
+                console.log("SignalR Connected");
+            } catch (err) {
+                console.error("SignalR Connection Error: ", err);
+                // Fallback para demo mode
+                startDemoMode();
+            }
+        }
+
+        // Start demo mode for testing
+        function startDemoMode() {
+            console.log("Starting demo mode");
+            
+            setTimeout(() => {
+                addTranscriptionMessage("speaker_1", "Bom dia doutor, estou sentindo muita dor de cabeça há 3 dias.", Date.now(), 0.95);
+            }, 2000);
+
+            setTimeout(() => {
+                addTranscriptionMessage("speaker_0", "Entendi. Vou prescrever 600mg de ibuprofeno, tome 1 comprimido a cada 8 horas por 5 dias.", Date.now(), 0.92);
+                activateAgent("prescription", 0.89, "Detectada prescrição de ibuprofeno");
+            }, 5000);
+
+            setTimeout(() => {
+                addGeneratedDocument("Receita Médica", "Ibuprofeno 600mg - 1 comp 8/8h por 5 dias", 
+                    { medication: "Ibuprofeno", dosage: "600mg", frequency: "8/8h" });
+            }, 7000);
+
+            setTimeout(() => {
+                addTranscriptionMessage("speaker_0", "Gostaria de agendar um retorno em 15 dias para ver como está evoluindo.", Date.now(), 0.91);
+                activateAgent("appointment", 0.87, "Detectado agendamento para 15 dias");
+            }, 10000);
+
+            setTimeout(() => {
+                addGeneratedDocument("Agendamento", "Retorno agendado para 15 dias", 
+                    { date: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toLocaleDateString(), type: "retorno" });
+            }, 12000);
+        }
+
+        // Add transcription message
+        function addTranscriptionMessage(speaker, text, timestamp, confidence) {
+            const container = document.getElementById('transcriptionContent');
+            const placeholder = document.getElementById('processingIndicator');
+            
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `speaker-message ${speaker}`;
+            
+            const time = new Date(timestamp).toLocaleTimeString();
+            const speakerLabel = speaker === 'speaker_0' ? 'Médico' : 'Paciente';
+            
+            messageDiv.innerHTML = `
+                <div class="timestamp">${time} - ${speakerLabel} (${Math.round(confidence * 100)}%)</div>
+                <div>${text}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+
+            // Update speech indicator
+            document.getElementById('speechIndicator').classList.add('active');
+        }
+
+        // Activate agent
+        function activateAgent(agentType, confidence, status) {
+            const agentMap = {
+                'prescription': 'prescriptionAgent',
+                'appointment': 'appointmentAgent', 
+                'report': 'reportAgent',
+                'evolution': 'evolutionAgent'
+            };
+
+            const agentId = agentMap[agentType];
+            if (!agentId) return;
+
+            const agentCard = document.getElementById(agentId);
+            agentCard.classList.add('working');
+            
+            const statusElement = agentCard.querySelector('.agent-status');
+            statusElement.textContent = status;
+            
+            const confidenceBar = agentCard.querySelector('.confidence-fill');
+            confidenceBar.style.width = `${confidence * 100}%`;
+            
+            const confidenceText = agentCard.querySelector('.agent-confidence');
+            confidenceText.textContent = `Confiança: ${Math.round(confidence * 100)}%`;
+
+            // Update agents indicator
+            document.getElementById('agentsIndicator').classList.add('active');
+
+            // Remove working state after processing
+            setTimeout(() => {
+                agentCard.classList.remove('working');
+                agentCard.classList.add('active');
+            }, 3000);
+        }
+
+        // Add generated document
+        function addGeneratedDocument(type, content, metadata) {
+            const container = document.getElementById('documentsContainer');
+            const placeholder = document.getElementById('documentsPlaceholder');
+            
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            const documentDiv = document.createElement('div');
+            documentDiv.className = 'document-item new';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            
+            documentDiv.innerHTML = `
+                <div class="document-type">
+                    ${getDocumentIcon(type)} ${type}
+                    <small style="color: #6c757d;">${timestamp}</small>
+                </div>
+                <div style="font-size: 14px; color: #666; margin-bottom: 10px;">
+                    ${content}
+                </div>
+                <div style="font-size: 12px; color: #6c757d; margin-bottom: 10px;">
+                    ${JSON.stringify(metadata)}
+                </div>
+                <div class="document-actions">
+                    <button class="btn btn-primary" onclick="previewDocument('${type}')">👁️ Visualizar</button>
+                    <button class="btn btn-success" onclick="downloadDocument('${type}')">⬇️ Download PDF</button>
+                </div>
+            `;
+            
+            container.appendChild(documentDiv);
+
+            // Update documents indicator
+            document.getElementById('documentsIndicator').classList.add('active');
+
+            // Remove 'new' class after animation
+            setTimeout(() => {
+                documentDiv.classList.remove('new');
+            }, 500);
+        }
+
+        // Get document icon
+        function getDocumentIcon(type) {
+            const icons = {
+                'Receita Médica': '💊',
+                'Agendamento': '📅',
+                'Laudo': '📋',
+                'Atestado': '🏥',
+                'Evolução': '📝'
+            };
+            return icons[type] || '📄';
+        }
+
+        // Start session
+        async function startSession() {
+            isSessionActive = true;
+            sessionStartTime = Date.now();
+            
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+            document.getElementById('processingIndicator').classList.add('active');
+            document.getElementById('processingIndicator').textContent = '🔄 Iniciando reconhecimento de voz...';
+
+            // Start session timer
+            sessionTimer = setInterval(updateSessionTime, 1000);
+
+            // Initialize SignalR if not already connected
+            if (!signalRConnection || signalRConnection.state !== signalR.HubConnectionState.Connected) {
+                await initializeSignalR();
+            }
+
+            // Start speech recognition (would call Azure Speech SDK)
+            if (signalRConnection && signalRConnection.state === signalR.HubConnectionState.Connected) {
+                await signalRConnection.invoke("StartTranscription");
+            }
+        }
+
+        // Stop session
+        async function stopSession() {
+            isSessionActive = false;
+            
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            
+            if (sessionTimer) {
+                clearInterval(sessionTimer);
+            }
+
+            // Stop speech recognition
+            if (signalRConnection && signalRConnection.state === signalR.HubConnectionState.Connected) {
+                await signalRConnection.invoke("StopTranscription");
+            }
+
+            // Reset indicators
+            document.querySelectorAll('.indicator-dot').forEach(dot => {
+                dot.classList.remove('active');
+            });
+        }
+
+        // Update session time
+        function updateSessionTime() {
+            if (!sessionStartTime) return;
+            
+            const elapsed = Date.now() - sessionStartTime;
+            const minutes = Math.floor(elapsed / 60000);
+            const seconds = Math.floor((elapsed % 60000) / 1000);
+            
+            document.getElementById('sessionTime').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Preview document
+        function previewDocument(type) {
+            alert(`Visualizando ${type} - Feature será implementada com modal/iframe`);
+        }
+
+        // Download document
+        function downloadDocument(type) {
+            alert(`Download de ${type} - Feature será implementada com geração de PDF`);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Medical Scribe UI initialized');
+            // Initialize SignalR connection
+            // initializeSignalR(); // Uncomment for production
+        });
+    </script>
+</body>
+</html>
